@@ -1,0 +1,6 @@
+# Do not track secrets
+nubis/cloudformation/parameters.json
+nubis/.librarian
+nubis/Puppetfile.lock
+nubis/librarian-puppet.tar.gz
+ec2_amazon-ebs-amazon-linux.pem

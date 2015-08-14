@@ -1,0 +1,2 @@
+mod 'bhourigan/puppet-akamai-dns',
+    :git => 'git@github.com:bhourigan/puppet-akamai-dns.git'
