@@ -206,53 +206,6 @@
           }
         ]
       }
-    },
-    "AkamaiARecord": {
-      "Type": "AWS::Route53::RecordSet",
-      "DependsOn": [
-        "EIP",
-        "EC2Stack"
-      ],
-      "Properties": {
-        "Type": "A",
-        "Comment": "A record that points to Akamai DNS EIP",
-        "TTL": "900",
-        "HostedZoneId": {
-          "Fn::Join": [
-            ".",
-            [
-              {
-                "Fn::GetAtt": [
-                  "ProjectInfo",
-                  "HostedZoneId"
-                ]
-              }
-            ]
-          ]
-        },
-        "Name": {
-          "Fn::Join": [
-            ".",
-            [
-              "akamai-dns",
-              {
-                "Ref": "Environment"
-              },
-              {
-                "Fn::GetAtt": [
-                  "ProjectInfo",
-                  "HostedZoneName"
-                ]
-              }
-            ]
-          ]
-        },
-        "ResourceRecords": [
-          {
-            "Ref": "EIP"
-          }
-        ]
-      }
     }
   },
   "Outputs": {
