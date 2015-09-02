@@ -54,7 +54,7 @@ aws --region us-east-1 cloudformation create-stack --template-body file://nubis/
 ### Update
 To update and existing stack:
 ```bash
-aws --region us-east-1 cloudformation update-stack --template-body file://nubis/cloudformation/main.json --parameters file://nubis/cloudformation/parameters.json --stack-name nubis-akamai-dns
+aws --region us-east-1 cloudformation update-stack --template-body file://nubis/cloudformation/main.json --parameters file://nubis/cloudformation/parameters.json --stack-name nubis-akamai-dns --capabilities CAPABILITY_IAM
 ```
 
 ### Delete
