@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Skeleton deployment for the nubis project.",
+  "Description": "Cloudformation template for nubis-akamai-dns deployment",
   "Parameters": {
     "ServiceName": {
       "Description": "Name of the service",
@@ -11,13 +11,19 @@
       "Default": "sandbox",
       "Type": "String",
       "AllowedValues": [
+        "admin",
         "prod",
         "stage",
         "sandbox"
       ],
       "ConstraintDescription": "Must specify prod, stage, or sandbox."
     },
-    "KeyName": {
+    "BaseZone": {
+      "Description": "Base zone to create route53 zone in",
+      "Default": "nubis.allizom.org",
+      "Type": "String"
+    },
+    "SSHKeyName": {
       "Description": "Existing ssh key to deploy to EC2 instances",
       "Type": "String"
     },
@@ -28,6 +34,11 @@
     "AmiId": {
       "Description": "The id of the ami for this region",
       "Type": "String"
+    },
+    "StacksVersion": {
+      "Description": "Version of the Nubis Stacks",
+      "Type": "String",
+      "Default": "v1.0.0"
     }
   },
   "Mappings": {
@@ -35,7 +46,7 @@
       "prod": {
         "InstanceType": "m3.large"
       },
-      "dev": {
+      "stage": {
         "InstanceType": "m3.medium"
       },
       "sandbox": {
@@ -44,10 +55,54 @@
     }
   },
   "Resources": {
+    "ProjectInfo": {
+      "Type": "Custom::ProjectInfo",
+      "Properties": {
+        "ServiceToken": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:lambda:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":function:",
+              "LookupStackOutputs"
+            ]
+          ]
+        },
+        "StackName": {
+          "Fn::Join": [
+            "-",
+            [
+              {
+                "Ref": "AWS::Region"
+              },
+              "vpc"
+            ]
+          ]
+        }
+      }
+    },
     "EC2Stack": {
       "Type": "AWS::CloudFormation::Stack",
       "Properties": {
-        "TemplateURL": "https://s3.amazonaws.com/nubisproject-stacks/master/ec2.template",
+        "TemplateURL": {
+          "Fn::Join": [
+            "/",
+            [
+              "https://s3.amazonaws.com/nubisproject-stacks",
+              {
+                "Ref": "StacksVersion"
+              },
+              "ec2.template"
+            ]
+          ]
+        },
         "TimeoutInMinutes": "60",
         "Parameters": {
           "StackName": {
@@ -65,8 +120,11 @@
           "AmiId": {
             "Ref": "AmiId"
           },
-          "KeyName": {
-            "Ref": "KeyName"
+          "SSHKeyName": {
+            "Ref": "SSHKeyName"
+          },
+          "IamRole": {
+            "Ref": "EIPRole"
           },
           "InstanceType": {
             "Fn::FindInMap": [
@@ -77,42 +135,133 @@
               "InstanceType"
             ]
           },
-          "ELB": {
-            "Fn::GetAtt": [
-              "ELBStack",
-              "Outputs.ELB"
-            ]
-          }
+          "SubnetLocation": "public"
         }
       }
     },
-    "ELBStack": {
-      "Type": "AWS::CloudFormation::Stack",
+    "EIP": {
+      "Type": "AWS::EC2::EIP"
+    },
+    "EIPRole": {
+      "Type": "AWS::IAM::Role",
       "Properties": {
-        "TemplateURL": "https://s3.amazonaws.com/nubisproject-stacks/master/elb.template",
-        "TimeoutInMinutes": "60",
-        "Parameters": {
-          "ServiceName": {
-            "Ref": "ServiceName"
-          },
-          "TechnicalOwner": {
-            "Ref": "TechnicalOwner"
-          },
-          "Environment": {
-            "Ref": "Environment"
-          },
-          "ElbHealthTarget": "HTTP:80/"
-        }
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "ec2.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Path": "/"
+      }
+    },
+    "EIPRolePolicies": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": {
+          "Fn::Join": [
+            "-",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "eip",
+              "associate",
+              "policy"
+            ]
+          ]
+        },
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "ec2:AssociateAddress",
+                "ec2:DisassociateAddress"
+              ],
+              "Resource": "*"
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "cloudformation:DescribeStacks"
+              ],
+              "Resource": "*"
+            }
+          ]
+        },
+        "Roles": [
+          {
+            "Ref": "EIPRole"
+          }
+        ]
+      }
+    },
+    "AkamaiARecord": {
+      "Type": "AWS::Route53::RecordSet",
+      "DependsOn": [
+        "EIP",
+        "EC2Stack"
+      ],
+      "Properties": {
+        "Type": "A",
+        "Comment": "A record that points to Akamai DNS EIP",
+        "TTL": "900",
+        "HostedZoneId": {
+          "Fn::Join": [
+            ".",
+            [
+              {
+                "Fn::GetAtt": [
+                  "ProjectInfo",
+                  "HostedZoneId"
+                ]
+              }
+            ]
+          ]
+        },
+        "Name": {
+          "Fn::Join": [
+            ".",
+            [
+              "akamai-dns",
+              {
+                "Ref": "Environment"
+              },
+              {
+                "Fn::GetAtt": [
+                  "ProjectInfo",
+                  "HostedZoneName"
+                ]
+              }
+            ]
+          ]
+        },
+        "ResourceRecords": [
+          {
+            "Ref": "EIP"
+          }
+        ]
       }
     }
   },
   "Outputs": {
-    "ELBDNSName": {
-      "Description": "Consul: / ELB CNAME",
+    "ElasticIP": {
+      "Description": "Consul: config/ Elastic IP",
       "Value": {
         "Fn::GetAtt": [
-          "ELBStack",
-          "Outputs.DNSName"
+          "EIP",
+          "AllocationId"
         ]
       }
     }

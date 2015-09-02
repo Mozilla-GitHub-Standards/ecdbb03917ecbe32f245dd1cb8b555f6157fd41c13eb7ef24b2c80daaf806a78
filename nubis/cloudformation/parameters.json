@@ -1,0 +1,26 @@
+[
+  {
+    "ParameterKey": "ServiceName",
+    "ParameterValue": "akamai-dns"
+  },
+  {
+    "ParameterKey": "Environment",
+    "ParameterValue": "sandbox"
+  },
+  {
+    "ParameterKey": "SSHKeyName",
+    "ParameterValue": "digi"
+  },
+  {
+    "ParameterKey": "TechnicalOwner",
+    "ParameterValue": "bhourigan@mozilla.com"
+  },
+  {
+    "ParameterKey": "AmiId",
+    "ParameterValue": "ami-0f41206a"
+  },
+  {
+    "ParameterKey": "StacksVersion",
+    "ParameterValue": "v1.0.0"
+  }
+]
