@@ -7,7 +7,7 @@
     ],
     "project_description": "Akamai EDNS hidden master",
     "project_name": "nubis-akamai-dns",
-    "project_version": "0.70",
+    "project_version": "0.72",
     "source_ami_project_name": "nubis-base"
   }
 }
