@@ -55,8 +55,8 @@
     }
   },
   "Resources": {
-    "ProjectInfo": {
-      "Type": "Custom::ProjectInfo",
+    "VpcInfo": {
+      "Type": "Custom::VpcInfo",
       "Properties": {
         "ServiceToken": {
           "Fn::Join": [
@@ -71,7 +71,7 @@
                 "Ref": "AWS::AccountId"
               },
               ":function:",
-              "LookupStackOutputs"
+              "LookupNestedStackOutputs"
             ]
           ]
         },
@@ -85,6 +85,9 @@
               "vpc"
             ]
           ]
+        },
+        "SearchString": {
+          "Ref": "Environment"
         }
       }
     },
@@ -210,13 +213,67 @@
         ]
       }
     },
-    "AkamaiSecurityGroup" : {
-      "Type" : "AWS::EC2::SecurityGroup",
-      "Properties" : {
-        "GroupDescription" : "Enable DNS access via port 53",
-        "SecurityGroupIngress" : [
-          {"IpProtocol" : "tcp", "FromPort" : "53", "ToPort" : "53", "CidrIp" : "0.0.0.0/0"},
-          {"IpProtocol" : "udp", "FromPort" : "53", "ToPort" : "53", "CidrIp" : "0.0.0.0/0"}
+    "AkamaiSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Inbound traffic rules",
+        "VpcId": {
+          "Fn::GetAtt": [
+            "VpcInfo",
+            "VpcId"
+          ]
+        },
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "ServiceName",
+            "Value": {
+              "Ref": "ServiceName"
+            }
+          },
+          {
+            "Key": "TechnicalOwner",
+            "Value": {
+              "Ref": "TechnicalOwner"
+            }
+          },
+          {
+            "Key": "Environment",
+            "Value": {
+              "Ref": "Environment"
+            }
+          },
+          {
+            "Key": "Purpose",
+            "Value": "DNS Server Security Group"
+          },
+          {
+            "Key": "Backups",
+            "Value": "Nightly"
+          },
+          {
+            "Key": "Shutdown",
+            "Value": "Never"
+          }
         ]
       }
     }
