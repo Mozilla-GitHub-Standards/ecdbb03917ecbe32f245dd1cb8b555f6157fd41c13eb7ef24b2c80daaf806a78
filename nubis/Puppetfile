@@ -2,4 +2,4 @@ mod 'bhourigan/puppet-akamai-dns',
     :git => 'https://github.com/bhourigan/puppet-akamai-dns.git'
 
 mod 'nubis/nubis_eip',
-    :git => 'https://github.com/bhourigan/nubis-puppet-eip.git'
+    :git => 'https://github.com/nubisproject/nubis-puppet-eip.git'
