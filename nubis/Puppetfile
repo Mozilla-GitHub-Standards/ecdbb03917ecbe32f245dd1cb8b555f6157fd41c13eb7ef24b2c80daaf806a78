@@ -1,2 +1,5 @@
 mod 'bhourigan/puppet-akamai-dns',
     :git => 'https://github.com/bhourigan/puppet-akamai-dns.git'
+
+mod 'torrancew/puppet-cpanm'
+    :git => 'https://github.com/torrancew/puppet-cpanm.git'
