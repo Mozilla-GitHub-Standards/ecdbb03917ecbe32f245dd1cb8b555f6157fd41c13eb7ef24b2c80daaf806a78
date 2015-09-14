@@ -17,7 +17,7 @@
   },
   {
     "ParameterKey": "AmiId",
-    "ParameterValue": "ami-b97702dc"
+    "ParameterValue": "ami-f7d6a392"
   },
   {
     "ParameterKey": "StacksVersion",
