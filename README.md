@@ -1,6 +1,6 @@
 ﻿# nubis-akamai-dns
 
-Nubis akamai dns project
+Nubis akamai dns slave project
 
 ## Quick start
 0. Set up the [Prerequisites](https://github.com/Nubisproject/nubis-docs/blob/master/PREREQUISITES.md)
