@@ -1,7 +1,7 @@
 forge "https://forgeapi.puppetlabs.com"
 
-mod 'bhourigan/puppet-akamai-dns',
-    :git => 'https://github.com/bhourigan/puppet-akamai-dns.git'
+mod 'nubis-apps/puppet-akamai-dns',
+    :git => 'https://git.mozilla.org/nubis-apps/puppet-akamai-dns'
 
 mod 'puppetlabs/apache', '1.6.0'
 
