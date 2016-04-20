@@ -1,13 +1,11 @@
 {
   "variables": {
-    "automatic_version_bump": "1",
-    "automatic_version_verify": "1",
     "builders": [
       "amazon-ebs-amazon-linux"
     ],
-    "project_description": "Akamai EDNS hidden master",
+    "project_description": "Akamai FastDNS hidden master",
     "project_name": "nubis-akamai-dns",
-    "project_version": "0.148",
-    "source_ami_project_name": "nubis-base"
+    "project_version": "v1.1.0_{{env `GIT_COMMIT_SHA`}}",
+    "source_ami_project_version": "v1.1.0"
   }
 }
