@@ -5,7 +5,7 @@
     ],
     "project_description": "Akamai FastDNS hidden master",
     "project_name": "nubis-akamai-dns",
-    "project_version": "v1.1.0_{{env `GIT_COMMIT_SHA`}}",
-    "source_ami_project_version": "v1.1.0"
+    "project_version": "v1.3.0_{{env `GIT_COMMIT_SHA`}}",
+    "source_ami_project_version": "v1.3.0"
   }
 }
