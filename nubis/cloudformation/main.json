@@ -44,13 +44,13 @@
   "Mappings": {
     "InstanceTypeMap": {
       "prod": {
-        "InstanceType": "m3.medium"
+        "InstanceType": "t2.micro"
       },
       "stage": {
-        "InstanceType": "m3.medium"
+        "InstanceType": "t2.nano"
       },
       "sandbox": {
-        "InstanceType": "m3.medium"
+        "InstanceType": "t2.nano"
       }
     }
   },
