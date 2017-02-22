@@ -2,7 +2,7 @@ forge "https://forgeapi.puppetlabs.com"
 
 mod 'nubis-apps/puppet-akamai-dns',
     :git => 'https://github.com/mozilla-it/puppet-akamai-dns.git',
-    :ref => 'f6d9ff3c78a27e1c0808254dc6245ba409207365'
+    :ref => '0.1.1'
 
 mod 'puppetlabs/apache', '1.6.0'
 
