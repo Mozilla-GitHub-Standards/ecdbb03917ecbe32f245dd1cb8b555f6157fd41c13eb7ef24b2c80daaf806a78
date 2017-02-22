@@ -146,7 +146,8 @@
       }
     },
     "EIP": {
-      "Type": "AWS::EC2::EIP"
+      "Type": "AWS::EC2::EIP",
+      "DeletionPolicy": "Retain"
     },
     "EIPRole": {
       "Type": "AWS::IAM::Role",
