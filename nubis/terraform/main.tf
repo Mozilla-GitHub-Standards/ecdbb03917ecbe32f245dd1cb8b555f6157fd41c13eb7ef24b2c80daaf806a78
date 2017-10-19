@@ -1,5 +1,5 @@
 module "worker" {
-  source       = "github.com/nubisproject/nubis-terraform//worker?ref=v1.5.0"
+  source       = "github.com/nubisproject/nubis-terraform//worker?ref=v2.0.1"
   region       = "${var.region}"
   environment  = "${var.environment}"
   account      = "${var.account}"
@@ -16,7 +16,7 @@ module "worker" {
 }
 
 module "info" {
-  source      = "github.com/nubisproject/nubis-terraform//info?ref=v1.5.0"
+  source      = "github.com/nubisproject/nubis-terraform//info?ref=v2.0.1"
   region      = "${var.region}"
   environment = "${var.environment}"
   account     = "${var.account}"

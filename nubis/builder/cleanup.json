@@ -1,9 +1,0 @@
-{
-  "provisioners": [
-    {
-      "type": "shell",
-      "inline": "sudo rm -rf /tmp/packer-puppet-masterless",
-      "order": "9"
-    }
-  ]
-}
