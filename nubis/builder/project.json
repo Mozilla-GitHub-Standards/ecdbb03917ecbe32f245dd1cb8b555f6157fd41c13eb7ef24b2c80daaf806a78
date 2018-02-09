@@ -1,11 +1,12 @@
 {
   "variables": {
     "builders": [
-      "amazon-ebs-amazon-linux"
+      "amazon-ebs-centos"
     ],
     "project_description": "Akamai FastDNS hidden master",
     "project_name": "nubis-akamai-dns",
-    "project_version": "v2.0.1_{{env `GIT_COMMIT_SHA`}}",
-    "source_ami_project_version": "v2.0.1"
+    "project_version": "v2.1.0_{{env `GIT_COMMIT_SHA`}}",
+    "deregister" : "true",
+    "source_ami_project_version": "v2.1.0"
   }
 }
